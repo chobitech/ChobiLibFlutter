@@ -1,7 +1,7 @@
 name: chobilib_flutter
-description: flutter libs by chobitech
-version: 0.0.1
-homepage:
+description: A flutter library by chobitech. This library for private use mainly.
+version: 0.0.2
+homepage: https://chobitech.com/
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
