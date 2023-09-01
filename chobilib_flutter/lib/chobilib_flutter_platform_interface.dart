@@ -25,6 +25,6 @@ abstract class ChobilibFlutterPlatform extends PlatformInterface {
 
   Future<String?> getPlatformVersion() async {
     //throw UnimplementedError('platformVersion() has not been implemented.');
-    return '0.1.1';
+    return '0.0.1';
   }
 }
