@@ -1,5 +1,5 @@
 
-import 'dart:ui';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
@@ -10,16 +10,17 @@ extension AllTypeExtensions<T> on T {
     return this;
   }
 
-  Future<T> alsoAsync(Future<void> Function(T t) f) async {
+  Future<T> alsoAsync(FutureOr<void> Function(T t) f) async {
     await f(this);
     return this;
   }
+
 
   R let<R>(R Function(T t) f) {
     return f(this);
   }
 
-  Future<R> letAsync<R>(Future<R> Function(T t) f) async {
+  Future<R> letAsync<R>(FutureOr<R> Function(T t) f) async {
     return await f(this);
   }
 
@@ -92,6 +93,91 @@ extension CanvasExtension on Canvas {
     }
 
     textPainter.paint(this, Offset(x, y));
+  }
+
+}
+
+extension StringDynamicMapExtension on Map<String, dynamic> {
+
+  T get<T>(String key, T defVal) {
+    return this[key] ?? defVal;
+  }
+
+  DateTime? getDateTime(String key, {DateTime? defaultDateTime}) {
+    return this[key]?.let((t) => DateTime.fromMillisecondsSinceEpoch(t)) ?? defaultDateTime;
+  }
+
+  DateTime getDateTimeOrNow(String key) {
+    return getDateTime(key, defaultDateTime: DateTime.now())!;
+  }
+
+
+  bool getBool(String key, bool defVal) {
+    return get(key, defVal.toInt()) > 0;
+  }
+}
+
+
+extension AnyListExtension<T> on List<T> {
+
+  int get lastIndex => (length > 0) ? length - 1 : -1;
+
+  void replace(int index, T newValue) {
+    if (index < 0 || index > lastIndex) {
+      return;
+    }
+
+    this[index] = newValue;
+  }
+}
+
+
+extension BoolExtension on bool {
+
+  int toInt() => this ? 1 : 0;
+
+  void when({void Function()? inTrue, void Function()? inFalse,}) {
+    if (this) {
+      inTrue?.call();
+    } else {
+      inFalse?.call();
+    }
+  }
+
+}
+
+extension TextEditControllerExtension on TextEditingController {
+
+  int get currentCursorPosition => selection.end;
+
+  void setCursorPosition({int position = 0}) {
+    selection = TextSelection.fromPosition(TextPosition(offset: position.clamp(0, text.length)));
+  }
+
+  void moveCursorWithDelta(int delta) {
+    setCursorPosition(position: currentCursorPosition + delta);
+  }
+
+  void setText(String text, {bool movePositionToEnd = true}) {
+    final curPos = (selection.end).clamp(0, this.text.length);
+    final pos = movePositionToEnd ? (curPos + text.length) : curPos;
+    this.text = text;
+    setCursorPosition(position: pos);
+  }
+
+  void insertText(String text, {int? positionAt}) {
+    final insertPos = (positionAt ?? selection.end).clamp(0, this.text.length);
+
+    final curChars = this.text.characters.toList();
+
+    if (insertPos == this.text.length) {
+      curChars.add(text);
+    } else {
+      curChars.insert(insertPos, text);
+    }
+
+    this.text = curChars.join('');
+    setCursorPosition(position: insertPos + text.length);
   }
 
 }

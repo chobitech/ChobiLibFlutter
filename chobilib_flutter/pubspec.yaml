@@ -1,6 +1,6 @@
 name: chobilib_flutter
 description: A flutter library by chobitech. This library for private use mainly.
-version: 0.0.2
+version: 0.0.17
 homepage: https://chobitech.com/
 
 environment:
@@ -12,13 +12,16 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  hooks_riverpod: ^2.3.10
-  plugin_platform_interface: ^2.0.2
+  hooks_riverpod: ^2.4.9
+  path: ^1.8.3
+  plugin_platform_interface: ^2.1.7
+  shared_preferences: ^2.2.2
+  sqflite: ^2.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
