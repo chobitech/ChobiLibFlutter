@@ -1,3 +1,5 @@
+
+/*
 import 'dart:async';
 
 import 'package:chobilib_flutter/extensions.dart';
@@ -41,7 +43,8 @@ class ChobiSQLiteDb {
   Database? _db;
 
   Future<Database> get database async {
-    return _db ?? await _open().then((value) => _db = value);
+    _db ??= await _open();
+    return _db!;
   }
 
   Future<void> delete() async {
@@ -100,3 +103,4 @@ extension DatabaseExtensions on Database {
   }
 
 }
+*/

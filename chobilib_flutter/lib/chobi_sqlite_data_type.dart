@@ -1,4 +1,5 @@
 
+/*
 enum ChobiSQLiteDataType {
 
   integer, text, real, blob;
@@ -41,3 +42,4 @@ enum ChobiSQLiteDataType {
   }
 
 }
+*/

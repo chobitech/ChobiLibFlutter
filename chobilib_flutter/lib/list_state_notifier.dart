@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ListStateNotifier<T> extends StateNotifier<List<T>> {
 
-  ListStateNotifier(List<T> initialList) : super(initialList);
+  ListStateNotifier(super.initialList);
 
   List<T> get currentList => [...state];
 

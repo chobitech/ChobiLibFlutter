@@ -10,7 +10,7 @@ class RandomString extends Randomize<String> {
   static const String _hexChars = 'abcdef';
   static const String _nonHexChars = 'ghijklmnopqrstuvwxyz';
 
-  RandomString({required List<String> strings, Random? random}) : super(elements: strings, random: random);
+  RandomString({required List<String> strings, super.random}) : super(elements: strings);
 
   RandomString.fromString({required String str, Random? random}) : this(strings: str.characters.toList(), random: random);
 

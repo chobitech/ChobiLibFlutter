@@ -1,29 +1,18 @@
 
 import 'dart:async';
+import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-extension AllTypeExtensions<T> on T {
-
-  T also(Function(T t) f) {
-    f(this);
-    return this;
-  }
-
-  Future<T> alsoAsync(FutureOr<void> Function(T t) f) async {
+extension AllTypeExtensions on dynamic {
+  FutureOr<dynamic> also(FutureOr<void> Function(dynamic v) f) async {
     await f(this);
     return this;
   }
 
-
-  R let<R>(R Function(T t) f) {
-    return f(this);
-  }
-
-  Future<R> letAsync<R>(FutureOr<R> Function(T t) f) async {
+  FutureOr<dynamic> let(FutureOr<dynamic> Function(dynamic v) f) async {
     return await f(this);
   }
-
 }
 
 
@@ -179,5 +168,61 @@ extension TextEditControllerExtension on TextEditingController {
     this.text = curChars.join('');
     setCursorPosition(position: insertPos + text.length);
   }
+}
 
+
+extension FontWeightExtensions on FontWeight {
+
+  List<FontVariation> toFontVariations() {
+    return [
+      FontVariation.weight(value.toDouble()),
+    ];
+  }
+
+}
+
+extension TextStyleExtensions on TextStyle {
+
+  TextStyle applyVariableWeight() {
+    return copyWith(
+      fontVariations: fontWeight?.toFontVariations(),
+    );
+  }
+
+}
+
+
+
+extension TextThemeExtensions on TextTheme {
+
+  TextTheme applyFontWeightToFontVariationsWith({
+    String? fontFamily,
+    Color? color,
+  }) {
+    return copyWith(
+      displayLarge: displayLarge?.applyVariableWeight(),
+      displayMedium: displayMedium?.applyVariableWeight(),
+      displaySmall: displaySmall?.applyVariableWeight(),
+
+      headlineLarge: headlineLarge?.applyVariableWeight(),
+      headlineMedium: headlineMedium?.applyVariableWeight(),
+      headlineSmall: headlineSmall?.applyVariableWeight(),
+
+      titleLarge: titleLarge?.applyVariableWeight(),
+      titleMedium: titleMedium?.applyVariableWeight(),
+      titleSmall: titleSmall?.applyVariableWeight(),
+
+      labelLarge: labelLarge?.applyVariableWeight(),
+      labelMedium: labelMedium?.applyVariableWeight(),
+      labelSmall: labelSmall?.applyVariableWeight(),
+
+      bodyLarge: bodyLarge?.applyVariableWeight(),
+      bodyMedium: bodyMedium?.applyVariableWeight(),
+      bodySmall: bodySmall?.applyVariableWeight(),
+    ).apply(
+      fontFamily: fontFamily,
+      displayColor: color,
+      bodyColor: color,
+    );
+  }
 }
