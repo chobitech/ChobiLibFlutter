@@ -5,16 +5,47 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 extension AllTypeExtensions on dynamic {
-  FutureOr<dynamic> also(FutureOr<void> Function(dynamic v) f) async {
+  dynamic alsoOnDynamic(void Function(dynamic v) f) {
+    f(this);
+    return this;
+  }
+
+  dynamic letOnDynamic(dynamic Function(dynamic v) f) {
+    return f(this);
+  }
+
+  Future<dynamic> alsoAsyncOnDynamic(FutureOr<void> Function(dynamic v) f) async {
     await f(this);
     return this;
   }
 
-  FutureOr<dynamic> let(FutureOr<dynamic> Function(dynamic v) f) async {
+  Future<dynamic> letAsyncOnDynamic(FutureOr<dynamic> Function(dynamic v) f) async {
     return await f(this);
   }
 }
 
+
+
+extension AllGenericsExtensions<T> on T {
+
+  T also(void Function(T v) f) {
+    f(this);
+    return this;
+  }
+
+  R let<R>(R Function(T v) f) {
+    return f(this);
+  }
+
+  Future<T> alsoAsync(FutureOr<void> Function(T v) f) async {
+    await f(this);
+    return this;
+  }
+
+  Future<R> letAsync<R>(FutureOr<R> Function(T v) f) async {
+    return await f(this);
+  }
+}
 
 extension RectExtension on Rect {
   bool isValidRect() {
