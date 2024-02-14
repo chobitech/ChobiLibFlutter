@@ -93,4 +93,3 @@ TextTheme generateAndApplyToAllWithValues({
   );
 
 }
-
