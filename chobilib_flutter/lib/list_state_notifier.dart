@@ -26,6 +26,8 @@ class ListStateNotifier<T> extends StateNotifier<List<T>> {
   void replace(int index, T obj) => _updateListState((curList) => curList..replace(index, obj));
   void replaceRange(int start, int end, List<T> objList) => _updateListState((curList) => curList..replaceRange(start, end, objList));
 
+  void replaceAll(List<T> list) => _updateListState((_) => list);
+
   void clear() => _updateListState((_) => []);
 
 }

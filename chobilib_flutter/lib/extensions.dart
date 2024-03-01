@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-extension AllTypeExtensions on dynamic {
+extension ChobiAllTypeExtensions on dynamic {
   dynamic alsoOnDynamic(void Function(dynamic v) f) {
     f(this);
     return this;
@@ -26,7 +26,7 @@ extension AllTypeExtensions on dynamic {
 
 
 
-extension AllGenericsExtensions<T> on T {
+extension ChobiAllGenericsExtensions<T> on T {
 
   T also(void Function(T v) f) {
     f(this);
@@ -47,7 +47,7 @@ extension AllGenericsExtensions<T> on T {
   }
 }
 
-extension RectExtension on Rect {
+extension ChobiRectExtension on Rect {
   bool isValidRect() {
     return !left.isNaN && !top.isNaN && !right.isNaN && !bottom.isNaN;
   }
@@ -57,7 +57,7 @@ extension RectExtension on Rect {
   }
 }
 
-extension SizeExtension on Size {
+extension ChobiSizeExtension on Size {
   Rect getRect({double left = 0, double top = 0}) {
     return Rect.fromLTWH(left, top, width, height);
   }
@@ -67,7 +67,7 @@ extension SizeExtension on Size {
   }
 }
 
-extension CanvasExtension on Canvas {
+extension ChobiCanvasExtension on Canvas {
 
   void drawText(
       String text,
@@ -117,7 +117,7 @@ extension CanvasExtension on Canvas {
 
 }
 
-extension StringDynamicMapExtension on Map<String, dynamic> {
+extension ChobiStringDynamicMapExtension on Map<String, dynamic> {
 
   T get<T>(String key, T defVal) {
     return this[key] ?? defVal;
@@ -138,7 +138,7 @@ extension StringDynamicMapExtension on Map<String, dynamic> {
 }
 
 
-extension AnyListExtension<T> on List<T> {
+extension ChobiAnyListExtension<T> on List<T> {
 
   int get lastIndex => (length > 0) ? length - 1 : -1;
 
@@ -149,10 +149,17 @@ extension AnyListExtension<T> on List<T> {
 
     this[index] = newValue;
   }
+
+  void addWithSeparator({T? separator, required T value,}) {
+    if (isNotEmpty && separator != null) {
+      add(separator);
+    }
+    add(value);
+  }
 }
 
 
-extension BoolExtension on bool {
+extension ChobiBoolExtension on bool {
 
   int toInt() => this ? 1 : 0;
 
@@ -166,7 +173,7 @@ extension BoolExtension on bool {
 
 }
 
-extension TextEditControllerExtension on TextEditingController {
+extension ChobiLibTextEditControllerExtension on TextEditingController {
 
   int get currentCursorPosition => selection.end;
 
@@ -199,10 +206,58 @@ extension TextEditControllerExtension on TextEditingController {
     this.text = curChars.join('');
     setCursorPosition(position: insertPos + text.length);
   }
+
+  void setOrInsertString(String s) {
+    final textValue = value;
+    final curSelection = textValue.selection;
+
+    String text;
+    int offset;
+
+    if (curSelection.start == curSelection.end && curSelection.start == -1) {
+      text = s;
+      offset = s.length;
+    } else {
+      text = textValue.text.replaceRange(curSelection.start, curSelection.end, s);
+      offset = curSelection.start + s.length;
+    }
+
+    value = TextEditingValue(
+      text: text,
+      selection: TextSelection.fromPosition(TextPosition(offset: offset)),
+    );
+  }
+
+
+  void delCharFromTextController() {
+    final textValue = value;
+    final curSelection = textValue.selection;
+
+    var startPos = curSelection.start;
+    final endPos = curSelection.end;
+
+    if (startPos == -1 || textValue.text.isEmpty) {
+      return;
+    }
+
+    if (startPos == endPos) {
+      if (startPos > 0) {
+        startPos--;
+      } else {
+        return;
+      }
+    }
+
+    value = TextEditingValue(
+      text: textValue.text.replaceRange(startPos, endPos, ''),
+      selection: TextSelection.fromPosition(TextPosition(offset: startPos)),
+    );
+
+  }
 }
 
 
-extension FontWeightExtensions on FontWeight {
+extension ChobiFontWeightExtensions on FontWeight {
 
   List<FontVariation> toFontVariations() {
     return [
@@ -212,7 +267,7 @@ extension FontWeightExtensions on FontWeight {
 
 }
 
-extension TextStyleExtensions on TextStyle {
+extension ChobiTextStyleExtensions on TextStyle {
 
   TextStyle applyVariableWeight() {
     return copyWith(
@@ -224,7 +279,7 @@ extension TextStyleExtensions on TextStyle {
 
 
 
-extension TextThemeExtensions on TextTheme {
+extension ChobiTextThemeExtensions on TextTheme {
 
   TextTheme applyFontWeightToFontVariationsWith({
     String? fontFamily,
@@ -257,3 +312,26 @@ extension TextThemeExtensions on TextTheme {
     );
   }
 }
+
+extension ChobiLibBuildContextExtension on BuildContext {
+
+  TextTheme get currentTextTheme => Theme.of(this).textTheme;
+  ColorScheme get currentColorScheme => Theme.of(this).colorScheme;
+
+  Size get screenSize => MediaQuery.of(this).size;
+
+  EdgeInsets get safeAreaPadding => MediaQuery.of(this).padding;
+
+  Rect get screenAreaWithinSafeArea {
+    final size = screenSize;
+    final sPad = safeAreaPadding;
+    return Rect.fromLTWH(
+      sPad.left,
+      sPad.top,
+      size.width - sPad.left - sPad.right,
+      size.height - sPad.top - sPad.bottom,
+    );
+  }
+
+}
+
